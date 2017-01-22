@@ -3,13 +3,14 @@ package com.adiko;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import static java.lang.Integer.parseInt;
@@ -24,7 +25,7 @@ public class Main extends Application {
     TextField inputA;
     TextField inputB;
     ToggleButton btnFullEuklid;
-    Label lblOutput;
+    TextArea tfOutput;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -56,9 +57,10 @@ public class Main extends Application {
 
         inputLayer.getChildren().addAll(inputA, inputB, btnFullEuklid);
 
-        lblOutput = new Label();
+        tfOutput = new TextArea();
+        tfOutput.setEditable(false);
 
-        layout.getChildren().addAll(inputLayer, lblOutput);
+        layout.getChildren().addAll(inputLayer, tfOutput);
 
         StackPane root = new StackPane();
         root.getChildren().add(layout);
@@ -75,6 +77,8 @@ public class Main extends Application {
         int q;
         int r;
 
+
+        tfOutput.setText("");
         try {
             a = parseInt(inputA.getText());
             b = parseInt(inputB.getText());
@@ -92,22 +96,22 @@ public class Main extends Application {
             } else {
                 q = a / b;
                 r = a % b;
-                lblOutput.setText(String.format("%d = %d * %d + %d", a, q, b, r));
+                tfOutput.setText(String.format("%d = %d * %d + %d", a, q, b, r));
             }
         } catch (NumberFormatException e) {
-            lblOutput.setText("ungültige Eingabe");
+            tfOutput.setText("ungültige Eingabe");
         }
     }
 
-    private void doFullEuklid(int a, int b) {
-        lblOutput.setText("siehe Konsole");
+    private void doFullEuklid(int a, int b){
         int q = a / b;
         int r = a % b;
-        System.out.println(String.format("%d = %d * %d + %d", a, q, b, r));
+        StringBuilder sb = new StringBuilder(tfOutput.getText());
+        tfOutput.setText("");
+        sb.append(String.format("%d = %d * %d + %d\n", a, q, b, r));
+        tfOutput.setText(sb.toString());
         if (r != 0) {
             doFullEuklid(b, r);
-        } else {
-            System.out.println();
         }
     }
 }
